@@ -6,6 +6,7 @@ import GrainOverlay from "./components/GrainOverlay";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import PageTransition from "./components/PageTransition";
+import GoLiveOverlay from "./components/GoLiveOverlay";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import RequestDemo from "./pages/RequestDemo";
@@ -25,6 +26,7 @@ export default function App() {
 
   return (
     <>
+      <GoLiveOverlay />
       <ScrollToTop />
       <GrainOverlay />
       <CustomCursor />
