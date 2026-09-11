@@ -4,8 +4,14 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { pricingBookingRouter } from './routes/pricingBookings';
+import { launchRouter, initLaunchState } from './routes/launch';
 
 dotenv.config();
+
+// Initialize launch state table (non-blocking)
+initLaunchState().catch((err) =>
+  console.error('[startup] initLaunchState error:', err.message)
+);
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,7 +21,7 @@ app.use(helmet());
 app.use(cors({
   origin: ALLOWED_ORIGIN,
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json({ limit: '50kb' }));
 
@@ -37,6 +43,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api/pricing-bookings', formLimiter, pricingBookingRouter);
+app.use('/api', launchRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ success: false, message: 'Endpoint not found' });

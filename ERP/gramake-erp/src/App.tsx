@@ -1,7 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import CustomCursor from "./components/CustomCursor";
 import GrainOverlay from "./components/GrainOverlay";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
@@ -29,7 +28,6 @@ export default function App() {
       <GoLiveOverlay />
       <ScrollToTop />
       <GrainOverlay />
-      <CustomCursor />
       <Nav />
       <main>
         <AnimatePresence mode="wait" initial={false}>
