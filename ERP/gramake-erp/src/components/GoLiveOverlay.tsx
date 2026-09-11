@@ -487,7 +487,7 @@ export default function GoLiveOverlay() {
                         onClick={handleEnter}
                         onKeyDown={handleKeyDown}
                         tabIndex={0}
-                        aria-label="Enter Gremake"
+                        aria-label="Launch Gremake"
                         className="group relative overflow-hidden rounded-full px-9 py-4 text-sm font-semibold tracking-wide text-white outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.97 }}
@@ -505,7 +505,7 @@ export default function GoLiveOverlay() {
                           }}
                           transition={{ duration: 0.3 }}
                         />
-                        <span className="relative z-10">Enter Gremake</span>
+                        <span className="relative z-10">LAUNCH Gremake</span>
                       </motion.button>
                     </motion.div>
 
