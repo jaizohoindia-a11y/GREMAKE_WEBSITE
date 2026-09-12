@@ -5,7 +5,6 @@ import GrainOverlay from "./components/GrainOverlay";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import PageTransition from "./components/PageTransition";
-import GoLiveOverlay from "./components/GoLiveOverlay";
 import Home from "./pages/Home";
 import Contact from "./pages/Contact";
 import RequestDemo from "./pages/RequestDemo";
@@ -20,12 +19,12 @@ function ScrollToTop() {
   return null;
 }
 
+/** Normal public website — only rendered when launched=true */
 export default function App() {
   const location = useLocation();
 
   return (
     <>
-      <GoLiveOverlay />
       <ScrollToTop />
       <GrainOverlay />
       <Nav />
