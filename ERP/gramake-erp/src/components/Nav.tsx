@@ -8,6 +8,7 @@ const links = [
   { label: "Features", href: "/#features" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "Mobile Apps", href: "/#mobile" },
+  { label: "Industries", href: "/industries" },
   { label: "Pricing", href: "/pricing" },
   { label: "Contact", href: "/contact" },
 ];
@@ -47,8 +48,9 @@ export default function Nav() {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <Link to="/" className="font-display text-xl font-bold text-ink">
-          Gremake
+        <Link to="/" aria-label="Gremake home" className="flex items-center gap-2">
+          <img src="/logo.png" alt="Gremake logo" className="h-7 w-auto" />
+          <span className="sr-only">Gremake</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main" onMouseLeave={() => setHovered(null)}>

@@ -9,12 +9,14 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-12 md:grid-cols-4">
           <div>
-            <Link to="/" className="font-display text-xl font-bold text-paper">
-              Gremake
+            <Link to="/" aria-label="Gremake home" className="inline-flex items-center gap-2">
+              <img src="/logo.png" alt="Gremake logo" className="h-7 w-auto" />
+              <span className="sr-only">Gremake</span>
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-paper/60">
-              Built by builders, for builders. The cloud ERP for construction
-              companies.
+              Built by builders, for builders. The cloud ERP platform for
+              construction, manufacturing, engineering / job work, and auto
+              components / industrial suppliers.
             </p>
             <a
               href={`mailto:${site.email}`}
