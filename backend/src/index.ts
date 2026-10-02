@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { pricingBookingRouter } from './routes/pricingBookings';
+import { enquiriesRouter } from './routes/enquiries';
 import { launchRouter, initLaunchState } from './routes/launch';
 
 dotenv.config();
@@ -44,6 +45,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/api/pricing-bookings', formLimiter, pricingBookingRouter);
 app.use('/api', launchRouter);
+app.use('/api', formLimiter, enquiriesRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ success: false, message: 'Endpoint not found' });

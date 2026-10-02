@@ -1,26 +1,39 @@
-import { Factory, Briefcase, HardHat } from "lucide-react";
+import { Factory, Cog, Factory as IndustrialFactory, HardHat } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 import RevealText from "../components/RevealText";
 import HoverCard from "../components/HoverCard";
+import { verticals as canonicalVerticals } from "../lib/pricing";
 
+// Derive identity from canonical config; retain page-specific marketing copy locally
+const construction = canonicalVerticals.find(v => v.id === "construction");
 const liveVertical = {
   icon: HardHat,
-  title: "Construction ERP",
+  title: construction?.name ?? "Construction ERP",
   desc: "Sites, projects, procurement, contractors, finance, billing, HR, and executive dashboards — fully live on Web, Android & iOS.",
 };
 
-const verticals = [
-  {
-    icon: Factory,
-    title: "Manufacturing ERP",
-    desc: "Production orders, BOM, quality control, machine operations, and inventory.",
-  },
-  {
-    icon: Briefcase,
-    title: "Services ERP",
-    desc: "Project timesheets, client billing, service contracts, and support ticketing.",
-  },
-];
+const descMap: Record<string, string> = {
+  manufacturing:
+    "Production orders, BOM, quality, machine operations, and inventory — built on the same Gremake ERP platform.",
+  engineering:
+    "Job work, machine utilisation, subcontracting, and cost control for engineering and fabrication shops.",
+  auto_components:
+    "Order book, dispatches, inventory, and receivables for component manufacturers and industrial suppliers.",
+};
+
+const iconMap: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
+  manufacturing: Factory,
+  engineering: Cog,
+  auto_components: IndustrialFactory,
+};
+
+const comingSoonVerticals = canonicalVerticals
+  .filter(v => v.status === "coming_soon")
+  .map(v => ({
+    Icon: iconMap[v.id] ?? Factory,
+    title: v.name,
+    desc: descMap[v.id] ?? "",
+  }));
 
 const gridVariants: Variants = {
   hidden: {},
@@ -51,9 +64,10 @@ export default function ComingSoon() {
         >
           Three verticals. One platform.
         </RevealText>
-        <p className="mx-auto mt-4 max-w-xl text-center text-sm text-ink/50">
-          Construction is live today. Manufacturing and Services are on the way.
-        </p>
+         <p className="mx-auto mt-4 max-w-xl text-center text-sm text-ink/50">
+           Construction ERP is live today. Manufacturing, Engineering / Job Work,
+           and Auto Components / Industrial Suppliers ERP are coming soon.
+         </p>
 
         {/* Construction — Live */}
         <motion.div
@@ -93,7 +107,7 @@ export default function ComingSoon() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          {verticals.map(({ icon: Icon, title, desc }) => (
+          {comingSoonVerticals.map(({ Icon, title, desc }) => (
             <motion.div
               key={title}
               variants={cardVariants}

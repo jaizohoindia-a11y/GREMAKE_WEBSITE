@@ -1,14 +1,120 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronDown, ChevronUp, Minus, Plus, X, Loader2 } from "lucide-react";
 import Reveal from "../components/Reveal";
 import RevealText from "../components/RevealText";
 import MagneticButton from "../components/MagneticButton";
+import HoverCard from "../components/HoverCard";
 import {
   erpTiers, implementationOptions, optionalServices, basicERPFeatures,
-  annualCareIncludes, gstConfig, getTierForUsers,
+  annualCareIncludes, gstConfig, getTierForUsers, verticals,
 } from "../lib/pricing";
-import type { OptionalService } from "../lib/pricing";
+import type { OptionalService, VerticalConfig } from "../lib/pricing";
+
+// ── Vertical selector tabs ────────────────────────────────────────────────────
+// Derive slug/id relationships from canonical verticals to avoid duplication
+
+function VerticalSelector({
+  selected,
+  onSelect,
+}: {
+  selected: string;
+  onSelect: (slug: string) => void;
+}) {
+  return (
+    <div className="flex flex-wrap justify-center gap-2 mb-10">
+      {verticals.map((v: VerticalConfig) => {
+        const slug = v.slug;
+        const isActive = slug === selected;
+        return (
+          <button
+            key={v.id}
+            onClick={() => onSelect(slug)}
+            className={`relative rounded-full px-5 py-2 text-sm font-semibold transition-all duration-200 border ${
+              isActive
+                ? "bg-accent text-paper border-accent shadow-md shadow-accent/20"
+                : "bg-white text-ink/70 border-ink/15 hover:border-accent hover:text-accent"
+            }`}
+          >
+            {v.shortName}
+            {v.status === "coming_soon" && (
+              <span className="ml-1.5 text-[9px] uppercase tracking-wider opacity-70">
+                Soon
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ComingSoonPricing({ vertical }: { vertical: VerticalConfig }) {
+  return (
+    <div className="max-w-2xl mx-auto text-center">
+      <Reveal>
+        <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-accent mb-6">
+          Coming Soon
+        </div>
+      </Reveal>
+      <Reveal delay={0.1}>
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-4">
+          {vertical.name}
+        </h2>
+      </Reveal>
+      <Reveal delay={0.15}>
+        <p className="text-ink/60 text-base leading-relaxed mb-8">
+          {vertical.description}
+        </p>
+      </Reveal>
+      <Reveal delay={0.2}>
+        <div className="grid gap-5 sm:grid-cols-2 max-w-xl mx-auto">
+          <HoverCard className="rounded-2xl border border-ink/10 bg-brand/[0.03] p-6 text-left">
+            <h3 className="font-display text-lg font-semibold text-ink mb-2">
+              Pricing
+            </h3>
+            <p className="text-sm leading-relaxed text-ink/60">
+              Pricing for {vertical.name} will be finalised closer to launch.
+              No numeric pricing is available yet.
+            </p>
+          </HoverCard>
+          <HoverCard className="rounded-2xl border border-ink/10 bg-brand/[0.03] p-6 text-left">
+            <h3 className="font-display text-lg font-semibold text-ink mb-2">
+              Interested?
+            </h3>
+            <p className="text-sm leading-relaxed text-ink/60">
+              Reach out via the demo or contact form and mention{" "}
+              {vertical.name} to discuss early access.
+            </p>
+          </HoverCard>
+        </div>
+      </Reveal>
+      <Reveal delay={0.25}>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Link
+            to="/request-demo"
+            className="rounded-full bg-accent px-7 py-3 text-sm font-semibold text-ink shadow-lg shadow-accent/30"
+          >
+            Request a demo
+          </Link>
+          <Link
+            to={`/industries/${vertical.slug}`}
+            className="rounded-full border border-ink/15 px-7 py-3 text-sm font-semibold text-ink hover:border-accent hover:text-accent"
+          >
+            Learn more about {vertical.shortName}
+          </Link>
+        </div>
+      </Reveal>
+      <Reveal delay={0.3}>
+        <p className="mt-6 text-xs text-ink/40">
+          No Book Now is available for coming-soon verticals. Commercial
+          details will be confirmed closer to launch.
+        </p>
+      </Reveal>
+    </div>
+  );
+}
 
 // ── Indian currency formatter ─────────────────────────────────────────────────
 function fmt(n: number): string {
@@ -188,6 +294,19 @@ function ServiceRow({ svc, checked, onToggle }: { svc: OptionalService; checked:
 
 // ── Main Pricing Page ─────────────────────────────────────────────────────────
 export default function PricingPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const verticalSlug = searchParams.get("vertical") ?? "construction";
+  const SLUG_TO_ID: Record<string, string> = Object.fromEntries(
+    verticals.map((v: VerticalConfig) => [v.slug, v.id])
+  );
+  const verticalId = SLUG_TO_ID[verticalSlug] ?? "construction";
+  const activeVertical = verticals.find((v: VerticalConfig) => v.id === verticalId) ?? verticals[0];
+  const isConstructionSelected = activeVertical.id === "construction";
+
+  const handleVerticalSelect = useCallback((slug: string) => {
+    setSearchParams(slug === "construction" ? {} : { vertical: slug }, { replace: true });
+  }, [setSearchParams]);
+
   const [userCount, setUserCount] = useState(10);
   const [selectedImpl, setSelectedImpl] = useState("standard");
   const [selectedOptIds, setSelectedOptIds] = useState<string[]>([]);
@@ -267,6 +386,14 @@ export default function PricingPage() {
             </Reveal>
           </div>
 
+          {/* Vertical selector */}
+          <VerticalSelector selected={verticalSlug} onSelect={handleVerticalSelect} />
+
+          {/* Coming-soon verticals */}
+          {!isConstructionSelected && <ComingSoonPricing vertical={activeVertical} />}
+
+          {/* Construction pricing configurator — exactly as before */}
+          {isConstructionSelected && (
           <div className="grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-6 items-start">
             {/* LEFT: Configuration */}
             <div className="space-y-4 min-w-0">
@@ -488,6 +615,7 @@ export default function PricingPage() {
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
 

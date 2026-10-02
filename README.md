@@ -1,6 +1,6 @@
 # Gremake Public Website
 
-Official public website for **Gremake** — a construction ERP platform.
+Official public website for **Gremake** — a multi-vertical ERP platform.
 
 **Live URL:** [https://gremake.com](https://gremake.com)
 
@@ -180,3 +180,12 @@ GREMAKE_WEBSITE/
 ## License
 
 Proprietary — Gremake / Jaizo India. All rights reserved.
+
+---
+
+## Current Vertical Roadmap
+
+- Construction ERP — Live
+- Manufacturing ERP — Coming Soon
+- Engineering / Job Work ERP — Coming Soon
+- Auto Components / Industrial Suppliers ERP — Coming Soon
